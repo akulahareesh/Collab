@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>6G Connectivity Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background: #0f62fe;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1rem;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      width: 300px;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin: 0.5rem 0;
+      color: #0f62fe;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 250px !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📡 6G Connectivity Dashboard</h1>
+    <p>Live Metrics and Network Overview</p>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h3>📶 Signal Strength</h3>
+      <h2 id="signalStrength">- dBm</h2>
+    </div>
+
+    <div class="card">
+      <h3>📡 Network Latency</h3>
+      <h2 id="latency">- ms</h2>
+    </div>
+
+    <div class="card">
+      <h3>🚀 Download Speed</h3>
+      <h2 id="downloadSpeed">- Gbps</h2>
+    </div>
+
+    <div class="card">
+      <h3>📤 Upload Speed</h3>
+      <h2 id="uploadSpeed">- Gbps</h2>
+    </div>
+
+    <div class="card">
+      <h3>📊 Network Usage</h3>
+      <canvas id="usageChart"></canvas>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 6G Network Monitor. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Simulate dynamic data
+    function getRandom(min, max, decimals = 1) {
+      return +(Math.random() * (max - min) + min).toFixed(decimals);
+    }
+
+    function updateMetrics() {
+      document.getElementById('signalStrength').innerText = getRandom(-60, -40) + ' dBm';
+      document.getElementById('latency').innerText = getRandom(0.5, 5, 2) + ' ms';
+      document.getElementById('downloadSpeed').innerText = getRandom(5, 15, 2) + ' Gbps';
+      document.getElementById('uploadSpeed').innerText = getRandom(2, 10, 2) + ' Gbps';
+    }
+
+    setInterval(updateMetrics, 2000); // update every 2 seconds
+    updateMetrics(); // initial load
+
+    // Chart.js usage simulation
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    const usageChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: Array.from({length: 10}, (_, i) => `T-${10 - i}s`),
+        datasets: [{
+          label: 'Bandwidth Usage (Gbps)',
+          data: Array.from({length: 10}, () => getRandom(2, 10)),
+          backgroundColor: 'rgba(15, 98, 254, 0.1)',
+          borderColor: '#0f62fe',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 15
+          }
+        }
+      }
+    });
+
+    setInterval(() => {
+      usageChart.data.datasets[0].data.shift();
+      usageChart.data.datasets[0].data.push(getRandom(2, 10));
+      usageChart.update();
+    }, 2000);
+  </script>
+</body>
+</html>
